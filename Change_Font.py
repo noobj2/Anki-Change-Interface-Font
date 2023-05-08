@@ -5,7 +5,7 @@ from os.path import dirname
 from aqt.webview import AnkiWebView
 from aqt.webview import WebContent
 from typing import Optional, List, Any
-from aqt import mw
+from aqt import mw, colors
 from aqt import gui_hooks
 from aqt.qt import *
 from aqt.theme import theme_manager
@@ -13,7 +13,7 @@ from aqt.utils import showInfo
 from anki import version
 import anki
 from anki.lang import is_rtl
-from anki.utils import isLin, isMac, isWin
+from anki.utils import is_lin, is_mac, is_win
 anki_version = int(version.replace('.', ''))
 
 config = mw.addonManager.getConfig(__name__)
@@ -82,10 +82,10 @@ class FontDialog(QDialog):
         showInfo("Changes will take effect after you restart anki.", title="Anki [Change Font]")
 
     def restore_defaults(self):
-        if isWin:
+        if is_win:
             font = "Segoe UI"
             font_size = 12
-        elif isMac:
+        elif is_mac:
             font = "Helvetica"
             font_size = 15
         else:
@@ -122,13 +122,13 @@ def stdHtml_new(
     family = config["Interface Font"]
     font_size = config["Font Size"]
 
-    if isWin:
+    if is_win:
         # T: include a font for your language on Windows, eg: "Segoe UI", "MS Mincho"
         # family = _('"Courier"')
         widgetspec = "button { font-family:%s; }" % family
         widgetspec += "\n:focus { outline: 1px solid %s; }" % color_hl
         fontspec = "font-size:{}px; font-family:{};".format(font_size, family)
-    elif isMac:
+    elif is_mac:
         # family = "Helvetica"
         fontspec = 'font-size:{}px; font-family:"{}";'.format(font_size, family)
         widgetspec = """
@@ -206,13 +206,13 @@ def stdHtml_old(self, body, css=None, js=None, head=""):
     family = config["Interface Font"]
     font_size = config["Font Size"]
 
-    if isWin:
+    if is_win:
         #T: include a font for your language on Windows, eg: "Segoe UI", "MS Mincho"
         # family = _('"Segoe UI"')
         widgetspec = "button { font-size: 12px; font-family:%s; }" % family
         widgetspec += "\n:focus { outline: 1px solid %s; }" % color_hl
         fontspec = 'font-size:{}px; font-family:"{}";'.format(font_size, family)
-    elif isMac:
+    elif is_mac:
         # family="Helvetica"
         fontspec = 'font-size:{}px; font-family:"{}";'.format(font_size, family)
         widgetspec = """
@@ -273,12 +273,12 @@ def standard_css_old(self) -> str:
     family = config["Interface Font"]
     font_size = config["Font Size"]
 
-    if isWin:
+    if is_win:
         # T: include a font for your language on Windows, eg: "Segoe UI", "MS Mincho"
         button_style = "button { font-size: 12px; font-family:%s; }" % family
         button_style += "\n:focus { outline: 1px solid %s; }" % color_hl
         font = "font-size:{}px;font-family:{};".format(font_size, family)
-    elif isMac:
+    elif is_mac:
         font = 'font-size:{}px;font-family:"{}";'.format(font_size, family)
         button_style = """
 button { -webkit-appearance: none; background: #fff; border: 1px solid #ccc;
@@ -322,18 +322,17 @@ body {{ zoom: {zoom}; background: {background}; direction: {lang_dir}; {font} }}
 """
 
 def standard_css_new(self) -> str:
-    palette = theme_manager.default_palette
-    color_hl = palette.color(QPalette.Highlight).name()
+    color_hl = theme_manager.var(colors.BORDER_FOCUS)
 
     family = config["Interface Font"]
     font_size = config["Font Size"]
 
-    if isWin:
+    if is_win:
         # T: include a font for your language on Windows, eg: "Segoe UI", "MS Mincho"
         button_style = "button { font-size: 12px; font-family:%s; }" % family
         button_style += "\n:focus { outline: 1px solid %s; }" % color_hl
         font = f"font-size:{font_size}px;font-family:{family};"
-    elif isMac:
+    elif is_mac:
         font = f'font-size:{font_size}px;font-family:"{family}";'
         button_style = """
 button { -webkit-appearance: none; background: #fff; border: 1px solid #ccc;
