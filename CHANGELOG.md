@@ -1,3 +1,7 @@
+# Release v2.0.1
+
+- Linux bug fix
+
 # Release v2.0.0
 
 - Compatible with Anki versions > 2.1.56

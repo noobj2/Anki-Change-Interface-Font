@@ -10,7 +10,6 @@ from aqt.theme import theme_manager
 from aqt.utils import showInfo
 from anki import version
 import anki
-from anki.lang import is_rtl
 from anki.utils import is_mac, is_win
 anki_version = int(version.replace('.', ''))
 
@@ -113,55 +112,52 @@ def standard_css_new(self) -> str:
 
     if is_win:
         # T: include a font for your language on Windows, eg: "Segoe UI", "MS Mincho"
-        button_style = "button { font-size: 12px; font-family:%s; }" % family
-        button_style += "\n:focus { outline: 1px solid %s; }" % color_hl
-        font = f"font-size:{font_size}px;font-family:{family};"
+        button_style = f"""
+        button {{ font-family: {family}; }}
+        """
+        font = f"font-family: {family};"
     elif is_mac:
-        font = f'font-size:{font_size}px;font-family:"{family}";'
+        font = f'font-family:"{family}";'
         button_style = """
-button { -webkit-appearance: none; background: #fff; border: 1px solid #ccc;
-border-radius:5px; font-family: %s }""" % family
-    else:
-        color_hl_txt = palette.color(QPalette.HighlightedText).name()
-        color_btn = palette.color(QPalette.Button).name()
-        font = f'font-size:{font_size}px;font-family:"{family}";'
-        button_style = """
-/* Buttons */
-button{
-    background-color: %(color_btn)s;
-    font-family:"%(family)s"; }
-button:focus{ border-color: %(color_hl)s }
-button:active, button:active:hover { background-color: %(color_hl)s; color: %(color_hl_txt)s;}
-/* Input field focus outline */
-textarea:focus, input:focus, input[type]:focus, .uneditable-input:focus,
-div[contenteditable="true"]:focus {
-outline: 0 none;
-border-color: %(color_hl)s;
-}""" % {
-            "family": family,
-            "color_btn": color_btn,
-            "color_hl": color_hl,
-            "color_hl_txt": color_hl_txt,
+        button {
+        --canvas: #fff;
+        -webkit-appearance: none;
+        background: var(--canvas);
+        border-radius: var(--border-radius);
+        padding: 3px 12px;
+        border: 0.5px solid var(--border);
+        box-shadow: 0px 1px 3px var(--border-subtle);
+        font-family: Helvetica
         }
-
-    zoom = self.zoomFactor()
-
-    window_bg_day = self.get_window_bg_color(False).name()
-    window_bg_night = self.get_window_bg_color(True).name()
-    body_bg = window_bg_night if theme_manager.night_mode else window_bg_day
-
-    if is_rtl(anki.lang.currentLang):
-        lang_dir = "rtl"
+        .night-mode button { --canvas: #606060; --fg: #eee; }
+        """
     else:
-        lang_dir = "ltr"
+        font = f'font-family:"{family}". sans-serif;'
+        button_style = """
+        /* Buttons */
+        button{{
+            font-family: "{family}", sans-serif;
+        }}
+        /* Input field focus outline */
+        textarea:focus, input:focus, input[type]:focus, .uneditable-input:focus,
+        div[contenteditable="true"]:focus {{
+            outline: 0 none;
+            border-color: {color_hl};
+        }}
+        """.format(
+            family=family,
+            color_hl=color_hl
+        )
+
+    zoom = self.app_zoom_factor()
 
     return f"""
-body {{ zoom: {zoom}; background-color: {body_bg}; direction: {lang_dir}; }}
-html {{ {font} }}
-{button_style}
-:root {{ --window-bg: {window_bg_day} }}
-:root[class*=night-mode] {{ --window-bg: {window_bg_night} }}
-"""
+    body {{ zoom: {zoom}; background-color: var(--canvas); font-size: {font_size}px }}
+    html {{ {font} }}
+    {button_style}
+    :root {{ --canvas: {colors.CANVAS["light"]} }}
+    :root[class*=night-mode] {{ --canvas: {colors.CANVAS["dark"]} }}
+    """
 
 def open_window():
     font_dialog = FontDialog()
