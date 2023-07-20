@@ -127,10 +127,10 @@ def standard_css_new(self) -> str:
         padding: 3px 12px;
         border: 0.5px solid var(--border);
         box-shadow: 0px 1px 3px var(--border-subtle);
-        font-family: Helvetica
+        font-family: %s
         }
         .night-mode button { --canvas: #606060; --fg: #eee; }
-        """
+        """ % family
     else:
         font = f'font-family:"{family}". sans-serif;'
         button_style = """
