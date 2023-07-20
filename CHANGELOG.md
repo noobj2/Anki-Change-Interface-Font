@@ -1,3 +1,7 @@
+# Release v2.0.2
+
+- Fixed: button font not changing on mac
+
 # Release v2.0.1
 
 - Linux bug fix
