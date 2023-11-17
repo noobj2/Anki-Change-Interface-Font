@@ -1,3 +1,7 @@
+# v2.0.3
+
+- Fix for Anki version 23.10 (compatability for qt6)
+
 # Release v2.0.2
 
 - Fixed: button font not changing on mac
