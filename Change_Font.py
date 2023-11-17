@@ -27,7 +27,7 @@ class FontDialog(QDialog):
     def mainWindow(self):
         addon_path = dirname(__file__)
         self.choose_font()
-        self.setWindowFlags(Qt.Dialog | Qt.MSWindowsFixedSizeDialogHint)
+        self.setWindowFlags(Qt.WindowType.MSWindowsFixedSizeDialogHint)
         self.setLayout(self.layout)
         self.setWindowTitle("Anki - Change Font")
         self.setWindowIcon(QIcon(addon_path + "/icon.png"))
