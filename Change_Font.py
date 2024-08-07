@@ -132,7 +132,7 @@ def standard_css_new(self) -> str:
         .night-mode button { --canvas: #606060; --fg: #eee; }
         """ % family
     else:
-        font = f'font-family:"{family}". sans-serif;'
+        font = f'font-family:"{family}", sans-serif;'
         button_style = """
         /* Buttons */
         button{{
